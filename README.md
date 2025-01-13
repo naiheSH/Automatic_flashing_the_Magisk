@@ -21,12 +21,15 @@
 - Please enter the absolute path of your Payload.bin
 - Now you can flash in with one click without environment variables (please don't delete the source folder!)
 - Double-click the 开始.bat, select the flashing method according to the model, and then the phone can wait after turning on USB debugging and USB install in the boot state
-- If there is no payload .bin, put boot into the boot directory ~
+- If there is no payload.bin, put boot into the boot directory and into the tools~
+- Now can use the Rom's URL to download the boot image.(Need to support the URL search function)
 - **If there is an authorization window on your phone, please authorize, otherwise it will lead to failure!**
 
 ## Thanks
 
 - [Magisk](https://github.com/topjohnwu/Magisk): Patch the boot's script
+- [5ec1cff/Payload-dumper](https://github.com/5ec1cff/payload-dumper): Use the URL to payload-dumper to extract the boot image
+- [naiheSH/Payload-dumper](https://github.com/naiheSH/payload-dumper): Windows Batch support for 5ec1cff/Payload-dumper
 - [Android Debug Bridge](https://source.android.google.cn/docs/setup/build/adb?hl=zh-cn#download-adb): use the Android Debug Bridge flies
 - [Aria2](https://github.com/aria2/aria2): use the aria2 to multi thead download flies
 - [gitmirror](https://www.gitmirror.com/): provide Chinese Mainland users download speed up service

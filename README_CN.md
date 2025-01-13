@@ -20,12 +20,15 @@
 - 请输入你Payload.bin的绝对路径
 - 现在无需环境变量即可一键刷入(请不要删除source文件夹!)
 - 双击开始.bat，按照机型选择刷入方式，然后手机在开机状态，开启了USB调试和USB安装之后即可等待
-- 如果没有payload.bin，放入boot到此工具的boot目录即可~
+- 如果没有payload.bin，放入boot到此工具的boot目录根据工具提示即可~
+- 现已经支持URL提取boot镜像（需要对应资源的URL支持搜寻功能）
 - **手机上有授权窗口请授权，不然会导致失败！**
 
 ## 鸣谢
 
 - [Magisk](https://github.com/topjohnwu/Magisk): 提供修补boot的脚本
+- [5ec1cff/Payload-dumper](https://github.com/5ec1cff/payload-dumper): 使用卡刷包URL链接来获取boot镜像
+- [naiheSH/Payload-dumper](https://github.com/naiheSH/payload-dumper): 5ec1cff/Payload-dumper对Windows Batch的支持
 - [Android Debug Bridge](https://source.android.google.cn/docs/setup/build/adb?hl=zh-cn#download-adb): 调用adb调试
 - [Aria2](https://github.com/aria2/aria2):调用工具的多线程模式下载文件
 - [gitmirror](https://www.gitmirror.com/):提供中国大陆用户的下载加速服务
