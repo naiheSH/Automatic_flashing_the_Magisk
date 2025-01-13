@@ -41,8 +41,8 @@ echo.按B键开始进行内核版本大于或等于5.15版本的init_boot全自动刷入~
 :Nopatch_flies
 echo.
 echo.获取最新文件
-%aria%\aria2c.exe -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" -x 2 -c --file-allocation=none -o magisk_lib.zip -d %Magisk_source% https://gh.ddlc.top/https://github.com/badnng/Tools_library_download/releases/download/test/magisk_lib.zip
-%aria%\aria2c.exe -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" -x 2 -c --file-allocation=none -o Magisk.apk -d %Magisk_source% https://gh.ddlc.top/https://github.com/badnng/Tools_library_download/releases/download/test/Magisk.apk
+%aria%\aria2c.exe -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" -x 2 -c --file-allocation=none -o magisk_lib.zip -d %Magisk_source% https://ghp.miaostay.com/https://github.com/badnng/Tools_library_download/releases/download/test/magisk_lib.zip
+%aria%\aria2c.exe -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" -x 2 -c --file-allocation=none -o Magisk.apk -d %Magisk_source% https://ghp.miaostay.com/https://github.com/badnng/Tools_library_download/releases/download/test/Magisk.apk
 echo.按“A”键开始进行内核版本小于5.15版本的boot全自动刷入~
 echo.按“B”键开始进行内核版本大于或等于5.15版本的init_boot全自动刷入~
 echo.请输入选项:
