@@ -13,7 +13,24 @@ CLS
 rd /s /q %Magisk_source%\Magisk
 del /q %Magisk_source%\magisk_lib.zip
 del /q %Magisk_source%\Magisk.apk
+
 set /p payload_file=请输入您的payload.bin路径(如为boot请直接回车，并检查boot文件夹内是否有名为“boot.img”的原boot文件):
+if "%payload_file%"=="" (
+    choice /c YN /m "是否使用链接获取boot/init_boot？"
+    if errorlevel 2 (
+        echo.
+        echo.用户拒绝填写链接
+        echo.
+        goto start
+    ) else if errorlevel 1 (
+        set /p payload_URL=请输入您的payload.bin的URL:
+    ) else (
+        echo 无效的选择
+        goto title
+    )
+)
+
+:title
 title 全自动刷入magisk_V2---by badnng
 echo.
 echo.          全自动刷入magisk_V2
@@ -24,8 +41,8 @@ echo.按B键开始进行内核版本大于或等于5.15版本的init_boot全自动刷入~
 :Nopatch_flies
 echo.
 echo.获取最新文件
-%aria%\aria2c.exe -x 16 -c --file-allocation=none -o magisk_lib.zip -d %Magisk_source% https://hub.gitmirror.com/https://github.com/badnng/Tools_library_download/releases/download/test/magisk_lib.zip
-%aria%\aria2c.exe -x 16 -c --file-allocation=none -o Magisk.apk -d %Magisk_source% https://hub.gitmirror.com/https://github.com/badnng/Tools_library_download/releases/download/test/Magisk.apk
+%aria%\aria2c.exe -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" -x 2 -c --file-allocation=none -o magisk_lib.zip -d %Magisk_source% https://gh.ddlc.top/https://github.com/badnng/Tools_library_download/releases/download/test/magisk_lib.zip
+%aria%\aria2c.exe -U "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" -x 2 -c --file-allocation=none -o Magisk.apk -d %Magisk_source% https://gh.ddlc.top/https://github.com/badnng/Tools_library_download/releases/download/test/Magisk.apk
 echo.按“A”键开始进行内核版本小于5.15版本的boot全自动刷入~
 echo.按“B”键开始进行内核版本大于或等于5.15版本的init_boot全自动刷入~
 echo.请输入选项:
@@ -54,8 +71,23 @@ if %errorlevel%==0 (
 
 :next_boot
 CLS
-echo. 安装Magisk Manager，
+echo. 提取boot
+if "%payload_file%"=="" (
+    %payload%\payload_dumper.exe --partitions boot "%payload_URL%" --workers 4 --out %boot_origin%
+    goto install_MagiskManager
+) 
+if "%payload_URL%"=="" (
+    %payload%\payload_dumper.exe --partitions boot "%payload_file%" --workers 4 --out %boot_origin%
+    goto install_MagiskManager
+)
+else (
+    goto install_MagiskManager
+)
+
+:install_MagiskManager
+echo. 安装Magisk Manager
 %adb-tools%\adb install %Magisk_source%\Magisk.apk
+
 if %errorlevel%==0 (
     CLS
     goto final_boot
@@ -64,16 +96,15 @@ if %errorlevel%==0 (
     echo 安装Magisk，如安装失败，请确保是否给电脑授权usb安装或系统管家拦截（如MIUI，HyperOS）
     echo 检测将会在10秒后继续检测
     timeout /t 10 >nul
-    goto next_boot
+    goto install_MagiskManager
 )
 
 :final_boot
 echo. 解压所需文件
 .\source\7zip\7z x .\source\Magisk_flies\magisk_lib.zip -o.\source\Magisk_flies && REM 解压magisk-lib文件
 
-echo. 修补并提取boot
+echo. 修补boot
 %adb-tools%\adb shell rm -r /data/local/tmp/Magisk
-%payload%\payload-dumper-go.exe -p boot -o %boot_origin% %payload_file%
 %adb-tools%\adb push .\source\Magisk_flies\Magisk\ /data/local/tmp && REM 推送脚本
 %adb-tools%\adb push %boot_origin%\boot.img /data/local/tmp/Magisk && REM 推送boot
 %adb-tools%\adb shell chmod +x /data/local/tmp/Magisk/* && REM 给权限
@@ -102,6 +133,7 @@ if %errorlevel%==0 (
     timeout /t 10 >nul
 )
 
+REM 这里是刷入init_boot的部分
 :flash_initboot
 CLS
 echo. 正在检测USB调试授权
@@ -118,6 +150,20 @@ if %errorlevel%==0 (
 )
 
 :next_initboot
+echo. 提取init_boot
+if "%payload_file%"=="" (
+    %payload%\payload_dumper.exe --partitions init_boot "%payload_URL%" --workers 4 --out %boot_origin%
+    goto install_MagiskManager
+) 
+if "%payload_URL%"=="" (
+    %payload%\payload_dumper.exe --partitions init_boot "%payload_file%" --workers 4 --out %boot_origin%
+    goto install_MagiskManager
+)
+else (
+    goto install_MagiskManager
+)
+
+:install_MagiskManager_init
 echo. 安装Magisk Manager，
 %adb-tools%\adb install %Magisk_flies%/Magisk.apk
 if %errorlevel%==0 (
@@ -135,8 +181,7 @@ if %errorlevel%==0 (
 echo. 解压所需文件
 .\source\7zip\7z x .\source\Magisk_flies\magisk_lib.zip -o.\source\Magisk_flies && REM 解压magisk-lib文件
 
-echo. 修补并提取boot
-%payload%\payload-dumper-go.exe -p init_boot -o %boot_origin% %payload_file%
+echo. 修补init_boot
 %adb-tools%\adb push .\source\Magisk_flies\Magisk\ /data/local/tmp && REM 推送脚本
 %adb-tools%\adb push %boot_origin%\init_boot.img /data/local/tmp/Magisk && REM 推送boot
 %adb-tools%\adb shell chmod +x /data/local/tmp/Magisk/* && REM 给权限
@@ -144,7 +189,7 @@ echo. 修补并提取boot
 %adb-tools%\adb pull /data/local/tmp/Magisk/new-boot.img %boot_Magiskpatched%\init_boot.img && REM 拉取镜像
 %adb-tools%\adb shell rm -r /data/local/tmp/Magisk/
 
-echo. 刷入boot
+echo. 刷入init_boot
 echo. 设备将在10秒内重启进入fastboot，在此期间请不要拔出数据线!
 timeout /t 10 >nul
 
